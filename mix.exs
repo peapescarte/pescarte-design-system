@@ -39,7 +39,7 @@ defmodule DesignSystem.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:bandit, "~> 1.0.0"},
+      {:bandit, "~> 1.0"},
       {:phoenix, "~> 1.7.12"},
       {:lucide_icons, "~> 1.1"},
       {:phoenix_html, "~> 4.0"},
@@ -96,6 +96,7 @@ defmodule DesignSystem.MixProject do
 
   defp package do
     %{
+      name: "pescarte_design_system",
       files: ~w(lib priv .formatter.exs mix.exs README.md LICENSE),
       licenses: ["BSD-3-Clause"],
       links: %{"GitHub" => @github_url}
