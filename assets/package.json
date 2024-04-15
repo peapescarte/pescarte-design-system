@@ -1,0 +1,19 @@
+{
+  "name": "@pescarte/pescarte-design-system",
+  "version": "0.1.0",
+  "description": "Design System PEA Pescarte",
+  "repository": "https://github.com/peapescarte/pescarte-design-system",
+  "author": "zoedsoupe",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "dependencies": {
+    "esbuild": "^0.17.11",
+    "inputmask": "^5.0.7",
+    "phoenix": "file:../deps/phoenix",
+    "phoenix_html": "file:../deps/phoenix_html",
+    "phoenix_live_view": "file:../deps/phoenix_live_view",
+    "sass": "^1.63.6",
+    "tailwindcss": "^3.4.0",
+    "topbar": "^1.0.1"
+  }
+}

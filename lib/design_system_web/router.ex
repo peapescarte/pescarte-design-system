@@ -22,6 +22,6 @@ defmodule DesignSystemWeb.Router do
 
   scope "/", DesignSystemWeb do
     pipe_through :browser
-    live_storybook "/", backend_module: DesignSystemWeb.Storybook
+    live_storybook("/", backend_module: DesignSystemWeb.Storybook)
   end
 end

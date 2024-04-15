@@ -104,8 +104,6 @@ defmodule DesignSystem do
       <.button style="primary" submit> Submissão </.button>
   """
 
-  attr :name, :string, default: ""
-  attr :value, :string, default: ""
   attr :style, :string, values: ~w(primary secondary link), required: true
   attr :submit, :boolean, default: false
   attr :disabled, :boolean, default: false
@@ -118,8 +116,6 @@ defmodule DesignSystem do
   def button(assigns) do
     ~H"""
     <button
-      name={@name}
-      value={@value}
       type={if @submit, do: "submit", else: "button"}
       class={["btn", "btn-#{@style}", @class]}
       phx-click={@click}
@@ -137,10 +133,324 @@ defmodule DesignSystem do
     """
   end
 
-  @doc """
-  Renders a simple form.
+  ### COMPONENTES DE INPUT ####
 
+  @doc """
+  Componente de checkbox, usado para representar valores que podem
+  ter um valor ambíguo.
+
+  O mesmo obrigatoriamente recebe o atributos `label`, que representa a etiqueta,
+  o texto nome do campo em questão que é um checkbox.
+
+  Também é possível controlar dinamicamente se o componente será desabilitado
+  ou se o valor do checkbox será "assinado" com atributos `disabled` e
+  `checked` respectivamente.
+
+  ## Exemplo
+
+      <.checkbox id="send-emails" label="Deseja receber nossos emails?" checked />
+  """
+
+  attr :id, :string, required: false
+  attr :checked, :boolean, default: false
+  attr :disabled, :boolean, default: false
+  attr :label, :string, required: false, default: ""
+  attr :field, Phoenix.HTML.FormField
+  attr :name, :string
+  attr :required, :boolean, default: false
+
+  def checkbox(%{field: %Phoenix.HTML.FormField{}} = assigns) do
+    assigns
+    |> input()
+    |> checkbox()
+  end
+
+  def checkbox(assigns) do
+    ~H"""
+    <div class="flex items-center checkbox-container">
+      <input
+        id={@name}
+        name={@name}
+        type="checkbox"
+        checked={@checked}
+        disabled={@disabled}
+        value={@value}
+        required={@required}
+      />
+      <label for={@name}>
+        <.text size="base"><%= @label %></.text>
+      </label>
+    </div>
+    """
+  end
+
+  @doc """
+  Componente de radio, usado para representar valores que podem
+  ter um valor ambíguo.
+
+  O mesmo obrigatoriamente recebe o atributos `label`, que representa a etiqueta,
+  o texto nome do campo em questão que é um radio.
+
+  Também é possível controlar dinamicamente se o componente será desabilitado
+  ou se o valor do radio será "assinado" com atributos `disabled` e
+  `checked` respectivamente.
+
+  ## Exemplo
+
+      <.checkbox id="send-emails" label="Deseja receber nossos emails?" checked />
+  """
+
+  attr :id, :string, required: true
+  attr :name, :string
+  attr :disabled, :boolean, default: false
+  attr :checked, :boolean, default: false
+  attr :field, Phoenix.HTML.FormField
+
+  slot :label, required: true
+
+  def radio(%{field: %Phoenix.HTML.FormField{}} = assigns) do
+    assigns
+    |> input()
+    |> radio()
+  end
+
+  def radio(assigns) do
+    ~H"""
+    <div class="radio-container">
+      <input
+        id={@id}
+        name={@name}
+        type="radio"
+        disabled={@disabled}
+        checked={@checked}
+        class="radio-input"
+      />
+      <label for={@id} class="radio-label">
+        <.text size="base"><%= render_slot(@label) %></.text>
+      </label>
+    </div>
+    """
+  end
+
+  @doc """
+  Um componente de input de texto, para receber entradas da pessoa
+  usuária.
+
+  O mesmo recebe obrigatoriamente os atributos `name` e `label`,
+  para que seja possível o formulário que usar este componente
+  direcionar corretamente o dado da entrada da pessoa usuária, e a
+  etiqueta para ficar visivel sobre o que se trata o input em questão.
+
+  Opcionalmente o componente também recebe o atributo `mask`, que controla
+  o formato do texto que será escrito. Por exemplo um documento CPF tem o
+  formato "111.111.111-11".
+
+  Além disso é possível definir um texto de ajuda que será colocado "dentro"
+  do componte, com o atributo `placeholder`.
+
+  Caso queira dar um valor inicial para o componente, use o atributo `value`!
+
+  ## Exemplo
+
+      <.text_input name="cpf" mask="999.999.999-99" label="CPF" />
+
+      <.text_input name="password" label="Senha" type="password" />
+  """
+
+  attr :id, :string, default: nil
+  attr :type, :string, default: "text", values: ~w(date hidden cpf text password email phone)
+  attr :placeholder, :string, required: false, default: ""
+  attr :value, :string, required: false
+  attr :mask, :string, required: false, default: nil
+  attr :valid, :boolean, required: false, default: nil
+  attr :label, :string, default: nil
+  attr :field, Phoenix.HTML.FormField
+  attr :name, :string
+
+  attr :rest, :global, include: ~w(autocomplete disabled pattern placeholder readonly required)
+
+  def text_input(%{field: %Phoenix.HTML.FormField{}} = assigns) do
+    assigns
+    |> input()
+    |> text_input()
+  end
+
+  def text_input(assigns) do
+    ~H"""
+    <fieldset class="text-input-container">
+      <label :if={@label} for={@name}>
+        <.text size="lg"><%= @label %></.text>
+      </label>
+      <input
+        id={@id}
+        name={@name}
+        value={@value}
+        type={@type}
+        placeholder={@placeholder}
+        data-inputmask={if @mask, do: "mask: #{@mask}"}
+        class={["input", text_input_state(@valid)]}
+        {@rest}
+      />
+      <span :if={!is_nil(@valid)} class="dot">
+        <Lucideicons.circle_check :if={@valid} />
+        <Lucideicons.circle_x :if={!@valid} />
+      </span>
+    </fieldset>
+    """
+  end
+
+  defp text_input_state(nil), do: "input-default"
+  defp text_input_state(false), do: "input-error"
+  defp text_input_state(true), do: "input-success"
+
+  attr :id, :string, default: nil
+  attr :name, :string, default: nil
+  attr :disabled, :boolean, default: false
+  attr :placeholder, :string, required: false, default: ""
+  attr :value, :string, default: ""
+  attr :valid, :boolean, required: false, default: nil
+  attr :class, :string, default: ""
+
+  slot :label, required: false
+
+  def text_area(%{field: %Phoenix.HTML.FormField{}} = assigns) do
+    assigns
+    |> input()
+    |> text_area()
+  end
+
+  def text_area(assigns) do
+    ~H"""
+    <fieldset class={@class}>
+      <.text size="base"><%= render_slot(@label) %></.text>
+      <div class="textarea-grow-wrapper">
+        <textarea id={@id} name={@name} placeholder={@placeholder} disabled={@disabled} default=""><%= @value%></textarea>
+      </div>
+    </fieldset>
+    """
+  end
+
+  # função interna para criação de inputs dinâmicos
+  # cada componente de input possui sua função própria
+  # para melhor semântica, como `text_input` ou `checkbox`
+  defp input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
+    assigns
+    |> assign(field: nil, id: assigns.id || field.id)
+    |> assign(:name, field.name)
+    |> assign_new(:value, fn -> field.value end)
+  end
+
+  ### ACABA COMPONENTES DE INPUT ####
+
+  @doc """
+  Componente para criar links, que direcionam o usuário para outras
+  páginas internas da aplicação ou páginas externas de outras aplicações.
+
+  Recebe os mesmos atributos do componente nativo `Phoenix.Component.link/1`:
+
+  - `navigate`: redireciona a pessoa usuária, sem recarregar a página
+  - `patch`: redireciona a pessoa usuária para a mesma página, com parâmetros diferentes
+  - `href`: redireciona a pessoa usuária para outra página, interna ou externa da aplicação,
+  recarregando a página atual.
+
+  Além desses atributos esse componente precisa de uma `label`, que será o texto
+  exibido ao renderizar o link e também aceita um atributo opcional que controla
+  o tamanho da fonte do texto renderizado. Os possíveis valores são os mesmos que
+  o componente de texto definido em `PescarteWeb.DesignSystem.text/1`.
+
+  ## Exemplo
+
+      <.link navigate={~p"/app/perfil"}>Ir para Perfil</.link>
+
+      <.link href="https://google.com" text_size="lg">Google.com</.link>
+
+      <.link patch={~p"/app/relatorios"} text_size="lg">Recarregar lista de relatórios</.link>
+  """
+
+  attr :navigate, :string, required: false, default: nil
+  attr :patch, :string, required: false, default: nil
+  attr :href, :string, required: false, default: nil
+  attr :method, :string, default: "get", values: ~w(get put post delete patch)
+  attr :styless, :boolean, default: false
+  attr :class, :string, default: ""
+
+  slot :inner_block
+
+  def link(assigns) do
+    ~H"""
+    <Phoenix.Component.link
+      navigate={@navigate}
+      patch={@patch}
+      href={@href}
+      method={@method}
+      class={[if(!@styless, do: "link"), @class]}
+    >
+      <%= render_slot(@inner_block) %>
+    </Phoenix.Component.link>
+    """
+  end
+
+  @doc """
+  Renders flash notices.
   ## Examples
+      <.flash kind={:info} flash={@flash} />
+      <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
+  """
+  attr :id, :string, default: "flash", doc: "the optional id of flash container"
+  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
+  attr :visible, :boolean, default: true
+
+  attr :kind, :atom,
+    values: [:success, :warning, :error],
+    doc: "used for styling and flash lookup"
+
+  attr :rest, :global, doc: "the arbitrary HTML attributes to add to the flash container"
+
+  slot :inner_block, doc: "the optional inner block that renders the flash message"
+
+  def flash(assigns) do
+    ~H"""
+    <div
+      :if={msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind)}
+      id={@id}
+      phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
+      role="alert"
+      class={[
+        "flash-component",
+        Atom.to_string(@kind),
+        if(@visible, do: "visible", else: "invisible")
+      ]}
+      {@rest}
+    >
+      <div class="flash">
+        <Lucideicons.circle_check :if={@kind == :success} class="flash-icon" />
+        <Lucideicons.info :if={@kind == :warning} class="flash-icon" />
+        <Lucideicons.circle_x :if={@kind == :error} class="flash-icon" />
+        <.text size="lg"><%= msg %></.text>
+      </div>
+    </div>
+    """
+  end
+
+  @doc """
+  Shows the flash group with standard titles and content.
+  ## Examples
+      <.flash_group flash={@flash} />
+  """
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+
+  def flash_group(assigns) do
+    ~H"""
+    <.flash kind={:success} flash={@flash} />
+    <.flash kind={:warning} flash={@flash} />
+    <.flash kind={:error} flash={@flash} />
+    """
+  end
+
+  @doc """
+  Renderiza um formulário simples.
+
+  ## Exemplos
 
       <.simple_form for={@form} phx-change="validate" phx-submit="save">
         <.input field={@form[:email]} label="Email"/>

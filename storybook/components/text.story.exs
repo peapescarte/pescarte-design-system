@@ -56,7 +56,9 @@ defmodule Storybook.CoreComponents.Text do
           size: "lg",
           color: "text-black-80"
         },
-        slots: [~s|Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.|]
+        slots: [
+          ~s|Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.|
+        ]
       },
       %Variation{
         id: :body_text,
@@ -64,7 +66,9 @@ defmodule Storybook.CoreComponents.Text do
           size: "base",
           color: "text-black-80"
         },
-        slots: [~s|Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.|]
+        slots: [
+          ~s|Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.|
+        ]
       },
       %Variation{
         id: :caption,
@@ -77,4 +81,3 @@ defmodule Storybook.CoreComponents.Text do
     ]
   end
 end
-

@@ -3,12 +3,27 @@ import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
 import {Socket} from "phoenix"
 import {LiveSocket} from "phoenix_live_view"
-import topbar from "../vendor/topbar"
+import topbar from "topbar"
+
+// Phoenix Hooks
+let Hooks = {};
+
+Hooks.CpfNumberMask = {
+  mounted() {
+    this.el.addEventListener("input", e => {
+      let match = this.el.value.replace(/\D/g, "").match(/^(\d{3})(\d{3})(\d{3})(\d{2})$/)
+      if (match) {
+        this.el.value = `${match[1]}.${match[2]}.${match[3]}-${match[4]}`
+      }
+    })
+  }
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: {_csrf_token: csrfToken}
+  params: {_csrf_token: csrfToken},
+  hooks: Hooks
 })
 
 // Show progress bar on live navigation and form submits

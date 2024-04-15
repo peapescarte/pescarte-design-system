@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+.link {
+  @apply hover:underline decoration-from-font;
+  @apply text-blue-80 decoration-blue-80;
+}
+
+@import "./button.scss";
+@import "./radio.scss";
+@import "./checkbox.scss";
+@import "./input.scss";
+@import "./label.scss";
+@import "./textarea.scss";
+@import "./flash.scss";
+
+* {
+  font-family: 'Work Sans';
+}

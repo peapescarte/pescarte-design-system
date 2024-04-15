@@ -28,7 +28,8 @@ defmodule Storybook.Components.Button do
         attributes: %{
           style: "primary",
           click: "handle_click",
-          class: "px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center space-x-2"
+          class:
+            "px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center space-x-2"
         },
         slots: [~s|<i class="lucide lucide-check-circle"></i>Confirm|]
       },
@@ -40,17 +41,7 @@ defmodule Storybook.Components.Button do
           class: "px-4 py-2 rounded-lg border border-gray-400 text-gray-400 cursor-not-allowed"
         },
         slots: [~s|Disabled|]
-      },
-      %Variation{
-        id: :submit_button,
-        attributes: %{
-          style: "primary",
-          submit: true,
-          class: "px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-        },
-        slots: [~s|Submit|]
       }
     ]
   end
 end
-

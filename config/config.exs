@@ -17,25 +17,32 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
+config :dart_sass,
+  version: "1.63.6",
+  default: [
+    args: ~w(css/app.scss ../priv/static/assets/app.css.tailwind),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.4.0",
   design_system: [
     args: ~w(
       --config=tailwind.config.js
-      --input=css/app.css
+      --input=../priv/static/assets/app.css.tailwind
       --output=../priv/static/assets/app.css
     ),
     cd: Path.expand("../assets", __DIR__)
   ],
   storybook: [
-        args: ~w(
+    args: ~w(
           --config=tailwind.config.js
           --input=css/storybook.css
           --output=../priv/static/assets/storybook.css
         ),
-        cd: Path.expand("../assets", __DIR__)
-      ]
+    cd: Path.expand("../assets", __DIR__)
+  ]
 
 # Configures Elixir's Logger
 config :logger, :console,

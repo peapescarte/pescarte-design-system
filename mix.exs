@@ -1,6 +1,9 @@
 defmodule DesignSystem.MixProject do
   use Mix.Project
 
+  @version "0.1.0"
+  @github_url "https://github.com/peapescarte/pescarte-design-system"
+
   def project do
     [
       app: :design_system,
@@ -9,7 +12,11 @@ defmodule DesignSystem.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      docs: docs(),
+      description: description(),
+      package: package(),
+      source_url: @github_url
     ]
   end
 
@@ -42,6 +49,8 @@ defmodule DesignSystem.MixProject do
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.8", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:dart_sass, "~> 0.7", runtime: Mix.env() == :dev},
+      {:ex_doc, "~> 0.27", only: :dev, runtime: false}
     ]
   end
 
@@ -54,14 +63,42 @@ defmodule DesignSystem.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
-      "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["tailwind design_system", "esbuild design_system"],
+      "assets.setup": [
+        "sass.install --if-missing",
+        "tailwind.install --if-missing",
+        "esbuild.install --if-missing"
+      ],
+      "assets.build": ["sass default", "tailwind design_system", "esbuild design_system"],
       "assets.deploy": [
+        "sass default --minify",
         "tailwind design_system --minify",
         "tailwind storybook --minify",
         "esbuild design_system --minify",
         "phx.digest"
       ]
     ]
+  end
+
+  defp docs do
+    [
+      main: "DesignSystem",
+      source_ref: "v#{@version}",
+      source_url: @github_url,
+      extras: ["README.md"]
+    ]
+  end
+
+  defp description do
+    """
+    Design System do PEA Pescarte
+    """
+  end
+
+  defp package do
+    %{
+      files: ~w(lib priv .formatter.exs mix.exs README.md LICENSE),
+      licenses: ["BSD-3-Clause"],
+      links: %{"GitHub" => @github_url}
+    }
   end
 end

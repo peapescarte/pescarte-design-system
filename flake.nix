@@ -31,7 +31,7 @@
           mkShell {
             name = "peapescarte";
             packages = with pkgs;
-              [beam.elixir_1_16 zlib]
+              [beam.elixir_1_16 nodejs_18 zlib]
               ++ lib.optional stdenv.isLinux [inotify-tools]
               ++ lib.optional stdenv.isDarwin [
                 darwin.apple_sdk.frameworks.CoreServices
