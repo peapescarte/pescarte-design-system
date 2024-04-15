@@ -8,8 +8,11 @@ ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
 FROM ${BUILDER_IMAGE} as builder
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y build-essential git \
-    && apt-get clean && rm -f /var/lib/apt/lists/*_*
+RUN apt-get update -y && apt-get install -y build-essential git
+RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get update -y
+RUN apt-get install -y nodejs npm
+RUN apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # prepare build dir
 WORKDIR /app
@@ -32,13 +35,13 @@ RUN mkdir config
 COPY config/config.exs config/${MIX_ENV}.exs config/
 RUN mix deps.compile
 
+COPY storybook storybook
 COPY priv priv
-
 COPY lib lib
-
 COPY assets assets
 
 # compile assets
+RUN npm i --prefix assets
 RUN mix assets.deploy
 
 # Compile the release

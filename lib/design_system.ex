@@ -483,6 +483,20 @@ defmodule DesignSystem do
     """
   end
 
+  @doc """
+  Um componente de rodapé para a plataforma, expondo os logos
+  dos apoiadores e empresas parceiras.
+
+  É um componente estático, sem atributos, sem estado.
+  """
+  def footer(assigns) do
+    ~H"""
+    <footer class="flex justify-center items-center " }>
+      <img src="/images/footer_logos.svg" />
+    </footer>
+    """
+  end
+
   ## JS Commands
 
   def show(js \\ %JS{}, selector) do

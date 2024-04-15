@@ -4,6 +4,7 @@ import Config
 config :design_system, DesignSystemWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
+  render_errors: [formats: [html: DesignSystemWeb.ErrorHTML], layout: false],
   pubsub_server: DesignSystem.PubSub,
   live_view: [signing_salt: "ILTZUS+K"]
 
