@@ -70,7 +70,7 @@ defmodule DesignSystem.MixProject do
       ],
       "assets.build": ["sass default", "tailwind design_system", "esbuild design_system"],
       "assets.deploy": [
-        "sass default --minify",
+        "sass default",
         "tailwind design_system --minify",
         "tailwind storybook --minify",
         "esbuild design_system --minify",
